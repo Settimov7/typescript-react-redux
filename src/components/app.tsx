@@ -10,9 +10,29 @@ interface Props {
 	deleteToDo: typeof deleteToDo,
 }
 
-class AppView extends React.Component<Props> {
+interface State {
+	isLoading: boolean,
+}
+
+class AppView extends React.Component<Props, State> {
+	constructor(props: Props) {
+		super(props);
+		
+		this.state = {
+			isLoading: false
+		};
+	}
+	
+	componentDidUpdate(prevProps: Props): void {
+		if(!prevProps.toDos.length && this.props.toDos.length) {
+			this.setState({isLoading: false})
+		}
+	}
+	
 	onButtonClick = (): void => {
 		this.props.fetchToDos();
+		
+		this.setState({isLoading: true});
 	};
 	
 	onTodoClick = (id: number): void => {
@@ -29,6 +49,7 @@ class AppView extends React.Component<Props> {
 		return (
 			<div>
 				<button onClick={ this.onButtonClick }>Fetch ToDos</button>
+				{ this.state.isLoading && 'LOADING'}
 				{ this.renderList() }
 			</div>
 		);
