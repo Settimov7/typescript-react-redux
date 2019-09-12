@@ -1,12 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { ToDo, fetchToDos } from '../actions';
+import { ToDo, fetchToDos, deleteToDo } from '../actions';
 import { StoreState } from '../reducers';
 
 interface Props {
 	toDos: ToDo[],
 	
-	fetchToDos(): any,
+	fetchToDos: () => void,
+	deleteToDo: typeof deleteToDo,
 }
 
 class AppView extends React.Component<Props> {
@@ -14,7 +15,15 @@ class AppView extends React.Component<Props> {
 		this.props.fetchToDos();
 	};
 	
-	renderList = (): JSX.Element[] => this.props.toDos.map((toDo) => <div key={ toDo.id }>{ toDo.title }</div>);
+	onTodoClick = (id: number): void => {
+		this.props.deleteToDo(id);
+	};
+	
+	renderList = (): JSX.Element[] => this.props.toDos.map((toDo) => {
+		const {id, title} = toDo;
+		
+		return <div key={ id } onClick={() => this.onTodoClick(id)}>{ title }<hr/></div>
+	});
 	
 	render() {
 		return (
@@ -32,5 +41,5 @@ const mapStateToProps = ({ toDos }: StoreState): { toDos: ToDo[] } => ({
 
 export const App = connect(
 	mapStateToProps,
-	{ fetchToDos }
+	{ fetchToDos, deleteToDo }
 )(AppView);
