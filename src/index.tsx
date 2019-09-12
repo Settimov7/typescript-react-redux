@@ -1,12 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+interface Props {
+	color?: string;
+}
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+interface State {
+	counter: number;
+}
+
+class App extends React.Component<Props, State> {
+	// constructor(props: Props) {
+	// 	super(props);
+	//
+	// 	this.state = {
+	// 		counter: 0,
+	// 	}
+	// }
+	
+	state = {
+		counter: 0
+	};
+	
+	onIncrementButtonClick = (): void => {
+		this.setState({ counter: this.state.counter + 1 })
+	};
+	
+	onDecrementButtonClick = (): void => {
+		this.setState((prevState) => ({ counter: prevState.counter - 1 }))
+	};
+	
+	
+	render() {
+		return (
+			<div>
+				<button onClick={this.onIncrementButtonClick}>Increment</button>
+				<button onClick={this.onDecrementButtonClick}>Decrement</button>
+				{this.state.counter}
+			</div>
+		);
+	}
+}
+
+ReactDOM.render(<App />, document.querySelector('#root'));
